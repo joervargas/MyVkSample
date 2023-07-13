@@ -1,0 +1,74 @@
+[
+    {
+        "name": "glfw",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/glfw/glfw.git",
+            "revision": "3.3"
+        }
+    },
+    {
+        "name": "glslang",
+        "source": {
+        "type": "git",
+        "url": "https://github.com/KhronosGroup/glslang.git",
+        "revision": "6fe560f74f472726027e4059692c6eb1e7d972dc"
+        }
+    },
+    {
+        "name": "glm",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/g-truc/glm.git",
+            "revision": "0.9.9.8"
+        }
+    },
+    {
+        "name": "easy_profiler",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/yse/easy_profiler.git",
+            "revision": "046d9bd40cfd55ca3b1d798b16ad2a5673f66806"
+        }
+    },
+    {
+        "name": "optick",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/bombomby/optick.git",
+            "revision": "1.3.1.0"
+        }
+    },
+    {
+        "name": "assimp",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/assimp/assimp.git",
+            "revision": "v5.2.5"
+        }
+    },
+    {
+        "name": "etc2comp",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/google/etc2comp",
+            "revision": "9cd0f9cae0f32338943699bb418107db61bb66f2"
+        }
+    },
+    {
+        "name": "taskflow",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/taskflow/taskflow.git",
+            "revision": "v3.1.0"
+        }
+    },
+    {
+        "name": "meshoptimizer",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zeux/meshoptimizer",
+            "revision": "v0.16"
+        }
+    }
+]

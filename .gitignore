@@ -1,0 +1,10 @@
+.git/
+.vscode/
+Build/
+build/
+out/
+CMakePresets.json
+CMakeSettings.json
+deps/src/
+deps/archives/
+.bootstrap.json
