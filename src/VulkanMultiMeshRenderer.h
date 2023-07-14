@@ -38,10 +38,11 @@ public:
 
     void updateCountBuffer(VulkanRenderDevice& vkDev, size_t currentImage, uint32_t itemCount);
 
-private:
-
     std::vector<InstanceData> instances;
     std::vector<Mesh> meshes;
+
+private:
+
     std::vector<uint32_t> indexData;
     std::vector<float> vertexData;
 
@@ -83,5 +84,9 @@ private:
     // MeshData m_meshData;
 
     bool createDescriptorSet(VulkanRenderDevice& vkDev);
+
+    void loadInstanceData(const char* instanceFile);
+
+    MeshFileHeader loadMeshData(const char* meshFile);
 
 };
