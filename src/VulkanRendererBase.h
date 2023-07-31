@@ -20,7 +20,7 @@ public:
     virtual ~VulkanRendererBase();
     virtual void fillCommandBuffer(const VkCommandBuffer& commandBuffer, size_t currentImage) = 0;
 
-    inline VulkanImage getDepthTexture() const { return m_depthTexture; }   
+    inline VulkanImage getDepthTexture() const { return m_depthTexture; }
 
 protected:
 

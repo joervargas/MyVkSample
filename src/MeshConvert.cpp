@@ -40,8 +40,8 @@ Mesh convertAIMesh(const aiMesh *m)
         .meshSize = meshSize, 
         .vertexCount = m->mNumVertices,
         .lodOffset = {
-            m_indexOffset * sizeof(uint32_t),
-            (m_indexOffset + numIndices) * sizeof(uint32_t)
+            (uint32_t)(m_indexOffset * sizeof(uint32_t)),
+            (uint32_t)((m_indexOffset + numIndices) * sizeof(uint32_t))
         },
         .streamOffset = {
             m_vertexOffset * streamElementSize
