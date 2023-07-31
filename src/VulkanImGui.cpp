@@ -1,6 +1,7 @@
 #include "VulkanImGui.h"
 
 #include <stdio.h>
+#include <array>
 
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>

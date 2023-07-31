@@ -1,5 +1,6 @@
 #include "VulkanCubeRenderer.h"
 #include <cstdio>
+#include <array>
 #include <glm/ext.hpp>
 
 VulkanCubeRenderer::VulkanCubeRenderer(VulkanRenderDevice &vkDev, VulkanImage inDepthTexture, const char *textureFile) :

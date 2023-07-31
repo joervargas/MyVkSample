@@ -1635,7 +1635,7 @@ bool createColorAndDepthFramebuffers(VulkanRenderDevice &vkDev, VkRenderPass ren
 
 bool createGraphicsPipeline(VulkanRenderDevice &vkDev, VkRenderPass renderPass, VkPipelineLayout pipelineLayout, const std::vector<const char *> &shaderFiles, VkPipeline *pipeline, VkPrimitiveTopology topology, bool useDepth, bool useBlending, bool dynamicScissorState, int32_t customWidth, int32_t customHeight, uint32_t numPatchControlPoints)
 {
-    std::vector<ShaderModule> shaderModules;
+    std::vector<VulkanShaderModule> shaderModules;
     std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
 
     shaderModules.resize(shaderFiles.size());

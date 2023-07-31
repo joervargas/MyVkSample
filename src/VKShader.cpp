@@ -132,14 +132,14 @@ VkShaderStageFlagBits getVkShaderStageFromFileName(const char *fileName)
     return glslangShaderStageToVulkan(glslsangShaderStageFromFileName(fileName));
 }
 
-size_t compileShader(glslang_stage_t stage, const char* shaderSource, ShaderModule& shaderModule)
+size_t compileShader(glslang_stage_t stage, const char* shaderSource, VulkanShaderModule& shaderModule)
 {
     const glslang_input_t input =
     {
         .language = GLSLANG_SOURCE_GLSL,
         .stage = stage,
         .client = GLSLANG_CLIENT_VULKAN,
-        .client_version = GLSLANG_TARGET_VULKAN_1_3,
+        .client_version = GLSLANG_TARGET_VULKAN_1_2,
         .target_language = GLSLANG_TARGET_SPV,
         .target_language_version = GLSLANG_TARGET_SPV_1_3,
         .code = shaderSource,
@@ -196,7 +196,7 @@ size_t compileShader(glslang_stage_t stage, const char* shaderSource, ShaderModu
     return shaderModule.SPIRV.size();
 }
 
-size_t compileShaderFile(const char *file, ShaderModule &shaderModule)
+size_t compileShaderFile(const char *file, VulkanShaderModule &shaderModule)
 {
     std::string shaderSource = readShaderFile(file);
     if(!shaderSource.empty())
@@ -206,7 +206,7 @@ size_t compileShaderFile(const char *file, ShaderModule &shaderModule)
     return 0;
 }
 
-VkResult createShaderModule(VkDevice device, ShaderModule *sm, const char *fileName)
+VkResult createShaderModule(VkDevice device, VulkanShaderModule *sm, const char *fileName)
 {
     if(!compileShaderFile(fileName, *sm)) { return VK_NOT_READY; }
 

@@ -1,6 +1,7 @@
 #include "VulkanCanvas.h"
 
 #include <stdio.h>
+#include <array>
 
 using glm::vec3;
 using glm::vec4;
