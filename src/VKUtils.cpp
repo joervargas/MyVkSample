@@ -735,7 +735,7 @@ VkFormat findDepthFormat(VkPhysicalDevice device)
 {
     return findSupportedFormat(
         device, 
-        {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT, VK_FORMAT_D24_UNORM_S8_UINT },
+        {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
         VK_IMAGE_TILING_OPTIMAL,
         VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
     );
@@ -1390,11 +1390,6 @@ bool createColorAndDepthRenderPass(VulkanRenderDevice &vkDev, bool useDepth, VkR
         .attachment = 1,
         .layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL
     };
-
-    if(ci.flags & ERenderPassBit::ERPB_OFFSCREEN)
-    {
-        colorAttachment.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-    }
 
     std::vector<VkSubpassDependency> dependencies =
     {
