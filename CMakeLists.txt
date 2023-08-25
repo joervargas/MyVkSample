@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.26)
+cmake_minimum_required(VERSION 3.22)
 
 project(MyVkSample CXX C)
 set(CMAKE_CXX_STANDARD 20)
@@ -17,9 +17,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 
-# find_package(glslang CONFIG REQUIRED)
+find_package(glslang CONFIG REQUIRED)
 find_package(Threads REQUIRED)
-# find_package(SPIRV-Tools REQUIRED)	
+find_package(SPIRV-Tools REQUIRED)	
 
 option(BUILD_WITH_EASY_PROFILER "Enable EasyProfiler usage" ON)
 option(BUILD_WITH_OPTICK "Enable Optick usage" OFF)
@@ -76,7 +76,7 @@ set(DEPS_DIR ./deps/src)
 # add_subdirectory(${DEPS_DIR}/etc2comp)
 add_subdirectory(${DEPS_DIR}/glfw)
 add_subdirectory(${DEPS_DIR}/glm)
-add_subdirectory(${DEPS_DIR}/glslang)
+# add_subdirectory(${DEPS_DIR}/glslang)
 add_subdirectory(${DEPS_DIR}/imgui)
 # add_subdirectory(${DEPS_DIR}/meshoptimizer)
 add_subdirectory(${DEPS_DIR}/stb)
@@ -96,12 +96,12 @@ set(DEPS_DIR ./deps/src)
 # include_directories(${DEPS_DIR}/etc2comp)
 include_directories(${DEPS_DIR}/glfw/include)
 include_directories(${DEPS_DIR}/glm)
-include_directories(
-	${DEPS_DIR}/glslang
-	${DEPS_DIR}/glslang/glslang
-	${DEPS_DIR}/glslang/glslang/Include
-	${DEPS_DIR}/glslang/StandAlone
-)
+# include_directories(
+# 	${DEPS_DIR}/glslang
+# 	${DEPS_DIR}/glslang/glslang
+# 	${DEPS_DIR}/glslang/glslang/Include
+# 	${DEPS_DIR}/glslang/StandAlone
+# )
 include_directories(${DEPS_DIR}/imgui)
 # include_directories(${DEPS_DIR}/meshoptimizer)
 include_directories(${DEPS_DIR}/stb/include)
@@ -140,14 +140,15 @@ add_executable(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
 	Vulkan::Vulkan
-	SPIRV-Tools
-	# glslang::glslang
+	# SPIRV-Tools
+	glslang::glslang
 	# Vulkan::glslang
-	# glslang::SPIRV
-	# glslang::glslang-default-resource-limits
-	glslang
-	glslang-default-resource-limits
-	GLFW
+	glslang::SPIRV
+	glslang::glslang-default-resource-limits
+	# SPIRV
+	# glslang
+	# glslang-default-resource-limits
+	glfw
 	glm
 	stb_image
 	imgui
