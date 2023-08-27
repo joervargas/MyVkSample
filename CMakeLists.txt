@@ -16,6 +16,15 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+include(FetchContent)
+
+message("Fetching glslang...")
+FetchContent_Declare(
+    glslang
+    GIT_REPOSITORY https://github.com/KhronosGroup/glslang.git
+    GIT_TAG sdk-1.3.250.1
+)
+FetchContent_MakeAvailable(glslang)
 
 find_package(glslang CONFIG REQUIRED)
 find_package(Threads REQUIRED)
@@ -141,6 +150,7 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
 	Vulkan::Vulkan
 	# SPIRV-Tools
+<<<<<<< HEAD
 	glslang::glslang
 	# Vulkan::glslang
 	glslang::SPIRV
@@ -148,6 +158,16 @@ target_link_libraries(${PROJECT_NAME}
 	# SPIRV
 	# glslang
 	# glslang-default-resource-limits
+=======
+	# glslang::glslang
+	# Vulkan::glslang
+	# glslang::SPIRV
+	# glslang::glslang-default-resource-limits
+	SPIRV
+	glslang
+	glslang-default-resource-limits
+	# GLFW
+>>>>>>> ae6f482 (glslang correction)
 	glfw
 	glm
 	stb_image

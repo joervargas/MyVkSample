@@ -8,14 +8,6 @@
         }
     },
     {
-        "name": "glslang",
-        "source": {
-        "type": "git",
-        "url": "https://github.com/KhronosGroup/glslang.git",
-        "revision": "6fe560f74f472726027e4059692c6eb1e7d972dc"
-        }
-    },
-    {
         "name": "glm",
         "source": {
             "type": "git",
