@@ -26,9 +26,9 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(glslang)
 
-find_package(glslang CONFIG REQUIRED)
+# find_package(glslang CONFIG REQUIRED)
 find_package(Threads REQUIRED)
-find_package(SPIRV-Tools REQUIRED)	
+# find_package(SPIRV-Tools REQUIRED)	
 
 option(BUILD_WITH_EASY_PROFILER "Enable EasyProfiler usage" ON)
 option(BUILD_WITH_OPTICK "Enable Optick usage" OFF)
@@ -150,24 +150,13 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
 	Vulkan::Vulkan
 	# SPIRV-Tools
-<<<<<<< HEAD
-	glslang::glslang
+	glslang
 	# Vulkan::glslang
-	glslang::SPIRV
-	glslang::glslang-default-resource-limits
+	SPIRV
+	glslang-default-resource-limits
 	# SPIRV
 	# glslang
 	# glslang-default-resource-limits
-=======
-	# glslang::glslang
-	# Vulkan::glslang
-	# glslang::SPIRV
-	# glslang::glslang-default-resource-limits
-	SPIRV
-	glslang
-	glslang-default-resource-limits
-	# GLFW
->>>>>>> ae6f482 (glslang correction)
 	glfw
 	glm
 	stb_image
