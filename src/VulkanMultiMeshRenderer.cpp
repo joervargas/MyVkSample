@@ -55,7 +55,7 @@ void VulkanMultiMeshRenderer::updateIndirectBuffers(VulkanRenderDevice &vkDev, s
             const uint32_t j = instances[i].meshIndex;
             data[i] = 
             {
-                .vertexCount = static_cast<uint32_t>(meshes[j].getLODSize(instances[i].LOD) / sizeof(uint32_t)),
+                .vertexCount = static_cast<uint32_t>(meshes[j].getLODIndicesCount(instances[i].LOD) / sizeof(uint32_t)),
                 .instanceCount = 1,
                 .firstVertex = static_cast<uint32_t>(meshes[j].streamOffset[0] / meshes[j].streamElementSize[0]),
                 .firstInstance = i

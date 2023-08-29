@@ -20,9 +20,9 @@ struct Mesh final
     uint32_t streamCount = 0;
 
     // /* The offset for the index data is equal to the total count of all previous vertices in this mesh */
-    // uint32_t indexOffset = 0;
+    uint32_t indexOffset = 0;
 
-    // uint32_t vertexOffset = 0;
+    uint32_t vertexOffset = 0;
 
     /* An abstract identifier to reference material data stored elsewhere (subject to change)*/
     uint32_t materialID = 0;
@@ -39,9 +39,10 @@ struct Mesh final
     uint32_t lodOffset[kMaxLODs];
 
     /**
-     * we use a function to calculate the size;
+     * @brief use a function to calculate the size of LOD indices;
+     * @param lod index of LODs
      */
-    inline uint64_t getLODSize(uint32_t lod) const
+    inline uint64_t getLODIndicesCount(uint32_t lod) const
     {
         return lodOffset[lod + 1] - lodOffset[lod];
     }
@@ -100,3 +101,11 @@ struct InstanceData
     uint32_t LOD = 0;
     uint32_t m_indexOffset = 0;
 };
+
+MeshFileHeader loadMeshData(const char* meshFile, MeshData& out);
+
+void saveMeshData(const char* fileName, MeshData& m);
+
+void recalculateBoundingBoxes(MeshData& m);
+
+MeshFileHeader mergeMeshData(MeshData& m, const std::vector<MeshData*> md);

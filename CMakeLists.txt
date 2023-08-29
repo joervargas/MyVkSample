@@ -99,6 +99,8 @@ if(BUILD_WITH_OPTICK)
 	add_subdirectory(${DEPS_DIR}/optick)
 endif()
 
+add_subdirectory(./MeshConvert)
+add_subdirectory(./shared_utils)
 
 include_directories(${Vulkan_INCLUDE_DIR})
 set(DEPS_DIR ./deps/src)
@@ -132,14 +134,14 @@ endif()
 file(GLOB_RECURSE SRC_FILES LIST_DIRECTORIES false 
 	src/*.cpp 
 	src/*.c 
-	src/vk_exts/*.cpp  
-	src/vk_exts/*.c
+	# src/vk_exts/*.cpp  
+	# src/vk_exts/*.c
 )
 file(GLOB_RECURSE HDR_FILES LIST_DIRECTORIES false 
 	src/*.h 
 	src/*.hpp 
-	src/vk_exts/*.h
-	src/vk_exts/*.hpp
+	# src/vk_exts/*.h
+	# src/vk_exts/*.hpp
 )
 
 add_executable(${PROJECT_NAME} 
@@ -162,6 +164,7 @@ target_link_libraries(${PROJECT_NAME}
 	stb_image
 	imgui
 	assimp
+	shared_utils
 )
 
 if(BUILD_WITH_EASY_PROFILER)

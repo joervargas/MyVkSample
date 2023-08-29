@@ -1,6 +1,6 @@
 #pragma once
 
-#include "VtxData.h"
+#include <VtxData.h>
 #include <assimp/scene.h>
 
 

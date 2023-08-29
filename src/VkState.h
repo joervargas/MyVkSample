@@ -1,7 +1,7 @@
 #pragma once
 
-#include "VKUtils.h"
-#include "VKShader.h"
+#include "VkUtils.h"
+#include <VkShader.h>
 #include "Camera.h"
 #include "UtilsFPS.h"
 

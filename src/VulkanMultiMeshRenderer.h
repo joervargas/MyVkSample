@@ -2,7 +2,7 @@
 
 #include "VulkanRendererBase.h"
 
-#include "VtxData.h"
+#include <VtxData.h>
 
 #include <glm/glm.hpp>
 using glm::mat4;

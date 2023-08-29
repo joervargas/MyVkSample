@@ -1,5 +1,5 @@
-#include "VKUtils.h"
-#include "VKShader.h"
+#include "VkUtils.h"
+#include "VkShader.h"
 #include "Bitmap.h"
 #include "UtilsCubemap.h"
 #include "vk_exts/vk_exts.h"
