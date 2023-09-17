@@ -82,9 +82,17 @@ struct DrawData
     uint32_t materialIndex;
     uint32_t LOD;
     uint32_t indexOffset;
+    uint32_t vertexOffset;
     uint32_t transformIndex;
 };
 
+/**
+ * @brief Contains Mesh data
+ * @property indexData (std::vector<uint32_t>)
+ * @property vertexData (std::vector<float>)
+ * @property meshes (std::vector<Mesh>)
+ * @property boxes (std::vector<BoundingBox>)
+*/
 struct MeshData
 {
     std::vector<uint32_t> indexData;

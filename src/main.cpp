@@ -6,8 +6,8 @@
 #include <iostream>
 
 // #include <volk/volk.h>
-#include <imgui/imgui.h>
-#include <glslang/Include/glslang_c_interface.h>
+// #include <imgui/imgui.h>
+// #include <glslang/Include/glslang_c_interface.h>
 
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
@@ -30,30 +30,31 @@ int main()
     // EASY_PROFILER_ENABLE;
     // EASY_MAIN_THREAD;
 
-    glslang_initialize_process();
+    // glslang_initialize_process();
 
     // volkInitialize();
 
-    if(!glfwInit()) { exit(EXIT_FAILURE); }
-    if(!glfwVulkanSupported()) { exit(EXIT_FAILURE); }
+    // if(!glfwInit()) { exit(EXIT_FAILURE); }
+    // if(!glfwVulkanSupported()) { exit(EXIT_FAILURE); }
 
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-    window = glfwCreateWindow(kScreenWidth, kScreenHeight, "VulkanApp", nullptr, nullptr);
-    if(!window)
-    {
-        glfwTerminate();
-        exit(EXIT_FAILURE);
-    }
-
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
+    // glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+    // glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    // window = glfwCreateWindow(kScreenWidth, kScreenHeight, "VulkanApp", nullptr, nullptr);
+    // if(!window)
+    // {
+    //     glfwTerminate();
+    //     exit(EXIT_FAILURE);
+    // }
+    window = initWindow(kScreenWidth, kScreenHeight);
+    
+    // ImGui::CreateContext();
+    // ImGuiIO& io = ImGui::GetIO();
 
     glfwSetCursorPosCallback(
         window,
         [](auto* window, double x, double y)
         {
-            ImGui::GetIO().MousePos = ImVec2((float)x, (float)y);
+            // ImGui::GetIO().MousePos = ImVec2((float)x, (float)y);
         }
     );
 
@@ -61,9 +62,9 @@ int main()
         window,
         [](auto *window, int button, int action, int mods)
         {
-            auto& io = ImGui::GetIO();
+            // auto& io = ImGui::GetIO();
             const int idx = button == GLFW_MOUSE_BUTTON_LEFT ? 0 : button == GLFW_MOUSE_BUTTON_RIGHT ? 2 : 1;
-            io.MouseDown[idx] = action == GLFW_PRESS;
+            // io.MouseDown[idx] = action == GLFW_PRESS;
             if(button == GLFW_MOUSE_BUTTON_LEFT)
             {
                 mouseState.pressedLeft = action == GLFW_PRESS;
@@ -111,22 +112,23 @@ int main()
     const std::vector<VulkanRendererBase*> renderers =
     {
         vk_clear.get(),
-        vk_cube_renderer.get(),
-        vk_model_renderer.get(),
-        vk_canvas.get(),
-        vk_canvas2d.get(),
-        vk_imgui.get(),
+        // vk_cube_renderer.get(),
+        vk_multi_mesh_renderer.get(),
+        // vk_model_renderer.get(),
+        // vk_canvas.get(),
+        // vk_canvas2d.get(),
+        // vk_imgui.get(),
         vk_finish.get()
     };
 
     while(!glfwWindowShouldClose(window))
     {
-        {
-            // EASY_BLOCK("UpdateCameraPositioners");
-                positioner_firstPerson.update(deltaSeconds, mouseState.pos, mouseState.pressedLeft);
-                positioner_moveTo.update(deltaSeconds, mouseState.pos, mouseState.pressedLeft);
-            // EASY_END_BLOCK;
-        }   
+        // {
+        //     // EASY_BLOCK("UpdateCameraPositioners");
+        //         positioner_firstPerson.update(deltaSeconds, mouseState.pos, mouseState.pressedLeft);
+        //         positioner_moveTo.update(deltaSeconds, mouseState.pos, mouseState.pressedLeft);
+        //     // EASY_END_BLOCK;
+        // }   
 
         const double newTimeStamp = glfwGetTime();
         deltaSeconds = static_cast<float>(newTimeStamp - timeStamp);
@@ -134,20 +136,20 @@ int main()
 
         const bool frameRendered = drawFrame(window, renderers);
 
-        if(fpsCounter.tick(deltaSeconds, frameRendered))
-        {
-            fpsGraph.addPoint(fpsCounter.getFPS());
-        }
-        sineGraph.addPoint((float)sin(glfwGetTime() * 10.0));
+        // if(fpsCounter.tick(deltaSeconds, frameRendered))
+        // {
+        //     // fpsGraph.addPoint(fpsCounter.getFPS());
+        // }
+        // sineGraph.addPoint((float)sin(glfwGetTime() * 10.0));
         
-        {
+        // {
             // EASY_BLOCK("PollEvents");
                 glfwPollEvents();
             // EASY_END_BLOCK;
-        }
+        // }
     }
 
-    ImGui::DestroyContext();
+    // ImGui::DestroyContext();
 
     terminateVulkan();
     glfwTerminate();

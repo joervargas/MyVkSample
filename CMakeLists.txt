@@ -87,7 +87,7 @@ add_subdirectory(${DEPS_DIR}/glfw)
 add_subdirectory(${DEPS_DIR}/glm)
 # add_subdirectory(${DEPS_DIR}/glslang)
 add_subdirectory(${DEPS_DIR}/imgui)
-# add_subdirectory(${DEPS_DIR}/meshoptimizer)
+add_subdirectory(${DEPS_DIR}/meshoptimizer)
 add_subdirectory(${DEPS_DIR}/stb)
 # add_subdirectory(${DEPS_DIR}/taskflow)
 add_subdirectory(${DEPS_DIR}/assimp)
@@ -164,6 +164,7 @@ target_link_libraries(${PROJECT_NAME}
 	stb_image
 	imgui
 	assimp
+	meshoptimizer
 	shared_utils
 )
 
@@ -174,9 +175,12 @@ if(BUILD_WITH_OPTICK)
 	target_link_libraries(${PROJECT_NAME} Optick)
 endif()
 
-add_custom_command(
-    TARGET ${PROJECT_NAME}
-    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_SOURCE_DIR}/assets" "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
-    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_SOURCE_DIR}/shaders" "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
-    VERBATIM
-)
+# add_custom_command(
+#     TARGET ${PROJECT_NAME}
+#     COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_SOURCE_DIR}/assets" "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
+#     COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_SOURCE_DIR}/shaders" "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
+#     VERBATIM
+# )
+
+file(COPY shaders/shaders DESTINATION bin)
+file(COPY assets/assets DESTINATION bin)

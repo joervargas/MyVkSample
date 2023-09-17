@@ -16,7 +16,7 @@ public:
         const char* meshFile,
         const char* drawDataFile,
         const char* materialFile,
-        const char* vtxShaderFile,
+        const char* vertShaderFile,
         const char* fragShaderFile
     );
 
@@ -34,17 +34,17 @@ public:
 
     void updateMaterialBuffer(VulkanRenderDevice& vkDev, uint32_t materialSize, const void* materialData);
 
-    // void updateDrawDataBuffer(VulkanRenderDevice& vkDev, size_t currentImage, uint32_t drawDataSize, const void* drawData);
+    void updateDrawDataBuffer(VulkanRenderDevice& vkDev, size_t currentImage, uint32_t drawDataSize, const void* drawData);
 
     void updateCountBuffer(VulkanRenderDevice& vkDev, size_t currentImage, uint32_t itemCount);
 
-    std::vector<InstanceData> instances;
-    std::vector<Mesh> meshes;
+    // std::vector<InstanceData> instances;
+    // std::vector<Mesh> meshes;
 
 private:
 
-    std::vector<uint32_t> indexData;
-    std::vector<float> vertexData;
+    // std::vector<InstanceData> m_instances;
+    // std::vector<Mesh> m_meshes;
 
     // uint32_t m_vertexBufferSize;
     // uint32_t m_indexBufferSize;
@@ -54,16 +54,16 @@ private:
     uint32_t m_maxVertexBufferSize;
     uint32_t m_maxIndexBufferSize;
 
+    VkBuffer m_storageBuffer;
+    VkDeviceMemory m_storageBufferMemory;
+
     uint32_t m_maxInstances;
     uint32_t m_maxInstanceSize;
 
-    // uint32_t m_maxShapes;
+    uint32_t m_maxShapes;
 
-    // uint32_t m_maxDrawSize;
+    uint32_t m_maxDrawDataSize;
     uint32_t m_maxMaterialSize;
-
-    VkBuffer m_storageBuffer;
-    VkDeviceMemory m_storageBufferMemory;
 
     VkBuffer m_materialBuffer;
     VkDeviceMemory m_materialBufferMemory;
@@ -74,19 +74,19 @@ private:
     std::vector<VkBuffer> m_instanceBuffers;
     std::vector<VkDeviceMemory> m_instanceBuffersMemory;
 
-    // std::vector<VkBuffer> m_drawDataBuffers;
-    // std::vector<VkDeviceMemory> m_drawDataBuffersMemory;
+    std::vector<VkBuffer> m_drawDataBuffers;
+    std::vector<VkDeviceMemory> m_drawDataBuffersMemory;
 
-    // std::vector<VkBuffer> m_countBuffers;
-    // std::vector<VkDeviceMemory> m_countBuffersMemory;
+    std::vector<VkBuffer> m_countBuffers;
+    std::vector<VkDeviceMemory> m_countBuffersMemory;
 
-    // std::vector<DrawData> shapes;
-    // MeshData m_meshData;
+    std::vector<DrawData> m_shapes;
+    MeshData m_meshData;
 
     bool createDescriptorSet(VulkanRenderDevice& vkDev);
 
-    void loadInstanceData(const char* instanceFile);
+    // void loadInstanceData(const char* instanceFile);
 
-    MeshFileHeader loadMeshData(const char* meshFile);
+    void loadDrawData(const char* drawDataFile);
 
 };

@@ -10,7 +10,7 @@ public:
 
     virtual ~VulkanModelRenderer();
 
-    virtual void fillCommandBuffer(const VkCommandBuffer& VkCommandBuffer, size_t currentImage) override;
+    virtual void fillCommandBuffer(const VkCommandBuffer& commandBuffer, size_t currentImage) override;
 
     void updateUniformBuffer(VulkanRenderDevice& vkDev, uint32_t currentImage, const void* data, size_t dataSize);
 

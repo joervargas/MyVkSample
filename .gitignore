@@ -8,6 +8,7 @@ CMakePresets.json
 CMakeSettings.json
 
 deps/archives/
+deps/src/argh
 deps/src/assimp
 deps/src/easy_profiler
 deps/src/etc2comp

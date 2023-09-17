@@ -7,12 +7,13 @@
 
 #include "VulkanClear.h"
 #include "VulkanFinish.h"
-#include "VulkanImGui.h"
-#include "VulkanCanvas.h"
-#include "VulkanModelRenderer.h"
-#include "VulkanCubeRenderer.h"
+// #include "VulkanImGui.h"
+// #include "VulkanCanvas.h"
+// #include "VulkanCubeRenderer.h"
+// #include "VulkanModelRenderer.h"
+#include "VulkanMultiMeshRenderer.h"
 
-#include "LinearGraph.h"
+// #include "LinearGraph.h"
 
 #include <GLFW/glfw3.h>
 
@@ -34,19 +35,20 @@ struct UniformBuffer
     mat4 mvp;
 };
 
-extern std::unique_ptr<VulkanImGui> vk_imgui;
-extern std::unique_ptr<VulkanModelRenderer> vk_model_renderer;
-extern std::unique_ptr<VulkanCubeRenderer> vk_cube_renderer;
-extern std::unique_ptr<VulkanCanvas> vk_canvas;
-extern std::unique_ptr<VulkanCanvas> vk_canvas2d;
+// extern std::unique_ptr<VulkanImGui> vk_imgui;
+// extern std::unique_ptr<VulkanModelRenderer> vk_model_renderer;
+// extern std::unique_ptr<VulkanCubeRenderer> vk_cube_renderer;
+// extern std::unique_ptr<VulkanCanvas> vk_canvas;
+// extern std::unique_ptr<VulkanCanvas> vk_canvas2d;
+extern std::unique_ptr<VulkanMultiMeshRenderer> vk_multi_mesh_renderer;
 extern std::unique_ptr<VulkanClear> vk_clear;
 extern std::unique_ptr<VulkanFinish> vk_finish;
 
 static constexpr VkClearColorValue clearColorValue = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 extern FramesPerSecondCounter fpsCounter;
-extern LinearGraph fpsGraph;
-extern LinearGraph sineGraph;
+// extern LinearGraph fpsGraph;
+// extern LinearGraph sineGraph;
 
 extern vec3 cameraPos;
 extern vec3 cameraAngles;
@@ -59,18 +61,28 @@ extern const char* cameraType;
 extern const char* comboBoxItems[];
 extern const char* currentComboBoxItem;
 
+struct Resolution
+{
+    uint32_t width = 0;
+    uint32_t height = 0;
+};
+
+GLFWwindow* initWindow(int width, int height, Resolution* resolution = nullptr);
+
 bool initVulkan(GLFWwindow* window, uint32_t width, uint32_t height);
 
 void terminateVulkan();
 
 void reinitCamera();
 
-void renderGUI(GLFWwindow* window, uint32_t imageIndex);
+// void renderGUI(GLFWwindow* window, uint32_t imageIndex);
 
 void update3D(GLFWwindow* window, uint32_t imageIndex);
-
 void update2D(uint32_t imageIndex);
+
+void updateBuffers(uint32_t imageIndex);
 
 void composeFrame(GLFWwindow* window, uint32_t imageIndex, const std::vector<VulkanRendererBase*>& renderers);
 
 bool drawFrame(GLFWwindow* window, const std::vector<VulkanRendererBase*>& renderers);
+bool drawFrame(VulkanRenderDevice& vkDev, const std::function<void(uint32_t)>& updateBuffersFunc, std::function<void(VkCommandBuffer, uint32_t)>& composeFrameFunc);
