@@ -9,9 +9,19 @@ else()
     message("***Vulkan not found***")
 endif()
 
-find_package(glslang CONFIG REQUIRED)
+include(FetchContent)
+
+message("Fetching glslang...")
+FetchContent_Declare(
+    glslang
+    GIT_REPOSITORY https://github.com/KhronosGroup/glslang.git
+    GIT_TAG sdk-1.3.250.1
+)
+FetchContent_MakeAvailable(glslang)
+
+# find_package(glslang CONFIG REQUIRED)
 find_package(Threads REQUIRED)
-find_package(SPIRV-Tools REQUIRED)	
+# find_package(SPIRV-Tools REQUIRED)
 
 #output directories
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
