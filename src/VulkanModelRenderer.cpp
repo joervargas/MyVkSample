@@ -1,6 +1,7 @@
 #include "VulkanModelRenderer.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <array>
 
 VulkanModelRenderer::VulkanModelRenderer(VulkanRenderDevice &vkDev, const char *modelFile, const char *textureFile, uint32_t uniformDataSize) :

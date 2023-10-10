@@ -1,5 +1,6 @@
 #include "VulkanFinish.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 VulkanFinish::VulkanFinish(VulkanRenderDevice &vkDev, VulkanImage depthTexture) :
     VulkanRendererBase(vkDev, depthTexture)

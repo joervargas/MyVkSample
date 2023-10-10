@@ -40,8 +40,8 @@ Mesh convertAIMesh(const aiMesh *m)
         .meshSize = meshSize, 
         .vertexCount = m->mNumVertices,
         .lodOffset = {
-            m_indexOffset * sizeof(uint32_t),
-            (m_indexOffset + numIndices) * sizeof(uint32_t)
+            static_cast<uint32_t>(m_indexOffset * sizeof(uint32_t)),
+            static_cast<uint32_t>((m_indexOffset + numIndices) * sizeof(uint32_t))
         },
         .streamOffset = {
             m_vertexOffset * streamElementSize
@@ -124,8 +124,8 @@ void saveMeshToFile(FILE *f)
         .magicValue = 0x12345678,
         .meshCount = (uint32_t)m_meshes.size(),
         .dataBlockStartOffset = (uint32_t)(sizeof(MeshFileHeader) + m_meshes.size() * sizeof(Mesh)),
-        .indexDataSize = m_indexData.size() * sizeof(uint32_t),
-        .vertexDataSize = m_vertexData.size() * sizeof(float)
+        .indexDataSize = static_cast<uint32_t>(m_indexData.size() * sizeof(uint32_t)),
+        .vertexDataSize = static_cast<uint32_t>(m_vertexData.size() * sizeof(float))
     };
 
     fwrite(&header, 1, sizeof(header), f);
