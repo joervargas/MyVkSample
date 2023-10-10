@@ -7,7 +7,7 @@
 
 // #include <volk/volk.h>
 // #include <imgui/imgui.h>
-// #include <glslang/Include/glslang_c_interface.h>
+#include <glslang/Include/glslang_c_interface.h>
 
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>

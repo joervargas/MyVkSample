@@ -65,6 +65,18 @@ struct VulkanRenderDevice final
 
     VkCommandPool commandPool;
     std::vector<VkCommandBuffer> commandBuffers;
+
+    // Compute members
+    bool useCompute = false;
+
+    uint32_t computeFamily;
+    VkQueue computeQueue;
+
+    std::vector<uint32_t> deviceQueueIndices;
+    std::vector<VkQueue> deviceQueues;
+
+    VkCommandBuffer computeCommandBuffer;
+    VkCommandPool computeCommandPool;
 };
 
 struct SwapchainSupportDetails
@@ -101,6 +113,8 @@ void createInstance(VkInstance *instance);
 
 VkResult createDevice(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures2 deviceFeatures, uint32_t graphicsFamily, VkDevice *device);
 
+VkResult createDeviceWithCompute(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures2 deviceFeatrues, uint32_t graphicsFamily, uint32_t computeFamily, VkDevice* device);
+
 bool isDeviceSuitable(VkPhysicalDevice device);
 
 VkResult findSuitablePhysicalDevice(VkInstance instance, std::function<bool(VkPhysicalDevice)> selector, VkPhysicalDevice *physicalDevice);
@@ -127,6 +141,11 @@ bool initVulkanRenderDevice(
     std::function<bool(VkPhysicalDevice)> selector,
     VkPhysicalDeviceFeatures2 deviceFeatures);
 
+bool initVulkanRenderDeviceWithCompute(
+    VulkanInstance& vk, VulkanRenderDevice& vkDev,
+    uint32_t width, uint32_t height,
+    VkPhysicalDeviceFeatures2 deviceFeatures);
+
 void destroyVulkanRenderDevice(VulkanRenderDevice &vkDev);
 
 void destroyVulkanInstance(VulkanInstance &vk);
@@ -151,6 +170,15 @@ bool createBuffer(
     VkMemoryPropertyFlags properties,
     VkBuffer &buffer,
     VkDeviceMemory &bufferMemory);
+
+bool createSharedBuffer(
+    VulkanRenderDevice& vkDev,
+    VkDeviceSize size,
+    VkBufferUsageFlags usage,
+    VkMemoryPropertyFlags properties,
+    VkBuffer& buffer,
+    VkDeviceMemory& bufferMemory
+);
 
 void copyBuffer(
     VulkanRenderDevice& vkDev,
@@ -391,3 +419,15 @@ bool createGraphicsPipeline(
     int32_t customWidth = -1,
     int32_t customHeight = -1,
     uint32_t numPatchControlPoints = 0);
+
+VkResult createComputePipeline(
+    VkDevice device,
+    VkShaderModule computeShader,
+    VkPipelineLayout pipelineLayout,
+    VkPipeline* pipeline);
+
+bool executeComputeShader(
+    VulkanRenderDevice& vkDev,
+    VkPipeline pipeline, VkPipelineLayout pipelineLayout,
+    VkDescriptorSet descriptorSet,
+    uint32_t xsize, uint32_t ysize, uint32_t zsize);
