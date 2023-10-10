@@ -136,10 +136,14 @@ add_executable(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
 	Vulkan::Vulkan
-	SPIRV-Tools
-	glslang::glslang
-	glslang::SPIRV
-	glslang::glslang-default-resource-limits
+	# SPIRV-Tools
+	glslang
+	# Vulkan::glslang
+	SPIRV
+	glslang-default-resource-limits
+	# SPIRV
+	# glslang
+	# glslang-default-resource-limits
 	glfw
 	glm
 	stb_image
