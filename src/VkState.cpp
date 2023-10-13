@@ -94,16 +94,27 @@ bool initVulkan(GLFWwindow *window, uint32_t width, uint32_t height)
 
     VkPhysicalDeviceFeatures deviceFeatures1{};
     deviceFeatures1.geometryShader = VK_TRUE;
-    deviceFeatures1.drawIndirectFirstInstance = VK_TRUE; 
+    deviceFeatures1.drawIndirectFirstInstance = VK_TRUE;
+    deviceFeatures1.shaderSampledImageArrayDynamicIndexing = VK_TRUE;
+
     VkPhysicalDeviceShaderDrawParameterFeatures drawParamFeatures{};
     drawParamFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES;
     drawParamFeatures.shaderDrawParameters = VK_TRUE;
+
+    VkPhysicalDeviceDescriptorIndexingFeaturesEXT physDeviceDescriptorIndexingFeatures{};
+    physDeviceDescriptorIndexingFeatures.pNext = &drawParamFeatures;
+    physDeviceDescriptorIndexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT,
+    physDeviceDescriptorIndexingFeatures.shaderSampledImageArrayNonUniformIndexing = VK_TRUE;
+    physDeviceDescriptorIndexingFeatures.descriptorBindingVariableDescriptorCount = VK_TRUE;
+    physDeviceDescriptorIndexingFeatures.runtimeDescriptorArray = VK_TRUE;
+
     VkPhysicalDeviceFeatures2 deviceFeatures =
     {
         .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
-        .pNext = &drawParamFeatures,
+        .pNext = &physDeviceDescriptorIndexingFeatures,
         .features = deviceFeatures1
     };
+
     if(!initVulkanRenderDevice(vk, vkDev, width, height, isDeviceSuitable, deviceFeatures ) )
         { exit(EXIT_FAILURE); }
 
