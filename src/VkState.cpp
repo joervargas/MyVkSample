@@ -34,6 +34,9 @@ const char* cameraType = "FirstPerson";
 const char* comboBoxItems[] = { "FirstPerson", "MoveTo" };
 const char* currentComboBoxItem = cameraType;
 
+const double kAnimationFPS = 60.0;
+const uint32_t kNumFlipbookFrames = 100;
+
 Resolution detectResolution(int width, int height)
 {
     GLFWmonitor* monitor = glfwGetPrimaryMonitor();
@@ -102,8 +105,8 @@ bool initVulkan(GLFWwindow *window, uint32_t width, uint32_t height)
     drawParamFeatures.shaderDrawParameters = VK_TRUE;
 
     VkPhysicalDeviceDescriptorIndexingFeaturesEXT physDeviceDescriptorIndexingFeatures{};
-    physDeviceDescriptorIndexingFeatures.pNext = &drawParamFeatures;
     physDeviceDescriptorIndexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT,
+    physDeviceDescriptorIndexingFeatures.pNext = &drawParamFeatures;
     physDeviceDescriptorIndexingFeatures.shaderSampledImageArrayNonUniformIndexing = VK_TRUE;
     physDeviceDescriptorIndexingFeatures.descriptorBindingVariableDescriptorCount = VK_TRUE;
     physDeviceDescriptorIndexingFeatures.runtimeDescriptorArray = VK_TRUE;
@@ -118,6 +121,16 @@ bool initVulkan(GLFWwindow *window, uint32_t width, uint32_t height)
     if(!initVulkanRenderDevice(vk, vkDev, width, height, isDeviceSuitable, deviceFeatures ) )
         { exit(EXIT_FAILURE); }
 
+    std::vector<std::string> textureFiles;
+    for(uint32_t j = 0; j < 3; j++)
+    {
+        for(uint32_t i = 0; i != kNumFlipbookFrames; i++)
+        {
+            char fname[1024];
+            snprintf(fname, sizeof(fname), "data/explosion/explosion%02uframe%03u.tga", j, i+1);
+            textureFiles.push_back(fname); 
+        }
+    }
     // vk_imgui = std::make_unique<VulkanImGui>(vkDev);
     // vk_model_renderer = std::make_unique<VulkanModelRenderer>(vkDev, "assets/meshes/rubber_duck/scene.gltf", "assets/meshes/rubber_duck/textures/Duck_baseColor.png", (uint32_t)sizeof(glm::mat4));
     // vk_cube_renderer = std::make_unique<VulkanCubeRenderer>(vkDev, vk_model_renderer->getDepthTexture(), "assets/piazza_bologni_1k.hdr");

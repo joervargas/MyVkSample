@@ -457,7 +457,7 @@ bool initVulkanRenderDevice(VulkanInstance &vk, VulkanRenderDevice &vkDev, uint3
 
     vkDev.graphicsFamily = findQueueFamilies(vkDev.physicalDevice, VK_QUEUE_GRAPHICS_BIT);
 
-    vkGetPhysicalDeviceFeatures2(vkDev.physicalDevice, &deviceFeatures);
+    // vkGetPhysicalDeviceFeatures2(vkDev.physicalDevice, &deviceFeatures);
     VK_CHECK(createDevice(vkDev.physicalDevice, deviceFeatures, vkDev.graphicsFamily, &vkDev.device));
 
     vkGetDeviceQueue(vkDev.device, vkDev.graphicsFamily, 0, &vkDev.graphicsQueue);
@@ -475,7 +475,6 @@ bool initVulkanRenderDevice(VulkanInstance &vk, VulkanRenderDevice &vkDev, uint3
         width, height, 
         &vkDev.swapchain)
     );
-
     const size_t imageCount = createSwapchainImages(vkDev.device, vkDev.swapchain, vkDev.swapchainImages, vkDev.swapchainImageViews);
     vkDev.commandBuffers.resize(imageCount);
 
