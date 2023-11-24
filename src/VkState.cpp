@@ -15,7 +15,8 @@ size_t indexBufferSize;
 // std::unique_ptr<VulkanCubeRenderer> vk_cube_renderer;
 // std::unique_ptr<VulkanCanvas> vk_canvas;
 // std::unique_ptr<VulkanCanvas> vk_canvas2d;
-std::unique_ptr<VulkanMultiMeshRenderer> vk_multi_mesh_renderer;
+// std::unique_ptr<VulkanMultiMeshRenderer> vk_multi_mesh_renderer;
+std::unique_ptr<VulkanQuadRenderer> vk_quad_renderer;
 std::unique_ptr<VulkanClear> vk_clear;
 std::unique_ptr<VulkanFinish> vk_finish;
 
@@ -36,6 +37,38 @@ const char* currentComboBoxItem = cameraType;
 
 const double kAnimationFPS = 60.0;
 const uint32_t kNumFlipbookFrames = 100;
+
+struct AnimationState
+{
+    glm::vec2 position = glm::vec2(0);
+    double startTime = 0;
+    uint32_t texureIndex = 0;
+    uint32_t flipbookOffset = 0;
+};
+
+std::vector<AnimationState> animations;
+
+void updateAnimations()
+{
+    for(size_t i = 0; i < animations.size();)
+    {
+        animations[i].texureIndex = animations[i].flipbookOffset + (uint32_t)(kAnimationFPS * ((glfwGetTime() - animations[i].startTime)));
+        if (animations[i].texureIndex - animations[i].flipbookOffset > (kNumFlipbookFrames - 1)) 
+            { animations.erase(animations.begin() + i); }
+        else 
+            { i++; }
+    }
+}
+
+void fillQuadsBuffer(VulkanRenderDevice& vkDev, VulkanQuadRenderer& vk_quad_renderer, size_t currentImage)
+{
+    const float aspect = (float)vkDev.framebufferWidth / (float)vkDev.framebufferHeight;
+    const float quadsize = 0.5f;
+
+    vk_quad_renderer.clear();
+    vk_quad_renderer.quad(-quadsize, -quadsize * aspect, quadsize, quadsize * aspect);
+    vk_quad_renderer.updateBuffer(vkDev, currentImage);
+}
 
 Resolution detectResolution(int width, int height)
 {
@@ -84,6 +117,12 @@ GLFWwindow* initWindow(int width, int height, Resolution *resolution)
     return result;
 }
 
+void terminateWindow(GLFWwindow *window)
+{
+    glfwTerminate();
+    glslang_finalize_process();
+}
+
 bool initVulkan(GLFWwindow *window, uint32_t width, uint32_t height)
 {
     // EASY_FUNCTION();
@@ -127,7 +166,7 @@ bool initVulkan(GLFWwindow *window, uint32_t width, uint32_t height)
         for(uint32_t i = 0; i != kNumFlipbookFrames; i++)
         {
             char fname[1024];
-            snprintf(fname, sizeof(fname), "data/explosion/explosion%02uframe%03u.tga", j, i+1);
+            snprintf(fname, sizeof(fname), "assets/explosion/explosion%02uframe%03u.tga", j, i+1);
             textureFiles.push_back(fname); 
         }
     }
@@ -138,11 +177,15 @@ bool initVulkan(GLFWwindow *window, uint32_t width, uint32_t height)
     // vk_canvas2d = std::make_unique<VulkanCanvas>(vkDev, VulkanImage{ .image = VK_NULL_HANDLE, .imageView = VK_NULL_HANDLE });
     // vk_clear = std::make_unique<VulkanClear>(vkDev, vk_model_renderer->getDepthTexture());
     // vk_finish = std::make_unique<VulkanFinish>(vkDev, vk_model_renderer->getDepthTexture());
+    // vk_multi_mesh_renderer = std::make_unique<VulkanMultiMeshRenderer>(vkDev, "./assets/meshes/Exterior/exterior.vk_sample", "./assets/meshes/Exterior/exterior.vk_sample.drawdata", "", "./shaders/VK05.vert", "./shaders/VK05.frag");
+    vk_quad_renderer = std::make_unique<VulkanQuadRenderer>(vkDev, textureFiles);
     vk_clear = std::make_unique<VulkanClear>(vkDev, VulkanImage());
     vk_finish = std::make_unique<VulkanFinish>(vkDev, VulkanImage());
 
-    vk_multi_mesh_renderer = std::make_unique<VulkanMultiMeshRenderer>(vkDev, "./assets/meshes/Exterior/exterior.vk_sample", "./assets/meshes/Exterior/exterior.vk_sample.drawdata", "", "./shaders/VK05.vert", "./shaders/VK05.frag");
-
+    for(size_t i = 0; i < vkDev.swapchainImages.size(); i++)
+    {
+        fillQuadsBuffer(vkDev, *vk_quad_renderer.get(), i);
+    }
     // {
     //    vk_canvas->plane3d(vec3(0,+1.5,0), vec3(1,0,0), vec3(0,0,1), 40, 40, 10.0f, 10.0f, vec4(1,1,1,1), vec4(1,1,1,1));
 
@@ -162,7 +205,8 @@ void terminateVulkan()
     // vk_canvas = nullptr;
     // vk_cube_renderer = nullptr;
     // vk_model_renderer = nullptr;
-    vk_multi_mesh_renderer = nullptr;
+    // vk_multi_mesh_renderer = nullptr;
+    vk_quad_renderer = nullptr;
     vk_finish = nullptr;
     vk_clear = nullptr;
 
@@ -274,10 +318,11 @@ void update3D(GLFWwindow *window, uint32_t imageIndex)
 
     {
         // EASY_BLOCK("UpdateUniformBuffers");
-            vk_multi_mesh_renderer->updateUniformBuffer(vkDev, imageIndex, mtx);
+            // vk_multi_mesh_renderer->updateUniformBuffer(vkDev, imageIndex, mtx);
             // vk_model_renderer->updateUniformBuffer(vkDev, imageIndex, glm::value_ptr(mtx), sizeof(mat4));
             // vk_canvas->updateUniformBuffer(vkDev, p * view, 0.0f, imageIndex);
             // vk_canvas2d->updateUniformBuffer(vkDev, glm::ortho(0, 1, 1, 0), 0.0f, imageIndex);
+            vk_quad_renderer->updateBuffer(vkDev, imageIndex);
             // vk_cube_renderer->updateUniformBuffer(vkDev, imageIndex, mtx);
         // EASY_END_BLOCK;
     }

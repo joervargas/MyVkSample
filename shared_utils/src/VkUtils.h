@@ -290,8 +290,8 @@ size_t allocateVertexBuffer(
 bool createTexturedVertexBuffer(
     VulkanRenderDevice& vkDev,
     const char* fileName,
-    VkBuffer* storageBuffer, VkDeviceMemory* storageBufferMemory, size_t* vertexBufferSize, 
-    size_t* indexBufferSize);
+    VkBuffer* storageBuffer, VkDeviceMemory* storageBufferMemory,
+    size_t* vertexBufferSize, size_t* indexBufferSize);
 
 bool createDescriptorPool(
     VulkanRenderDevice& vkDev, 

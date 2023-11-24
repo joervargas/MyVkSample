@@ -12,6 +12,7 @@
 // #include "VulkanCubeRenderer.h"
 // #include "VulkanModelRenderer.h"
 #include "VulkanMultiMeshRenderer.h"
+#include "VulkanQuadRenderer.h"
 
 // #include "LinearGraph.h"
 
@@ -40,7 +41,8 @@ struct UniformBuffer
 // extern std::unique_ptr<VulkanCubeRenderer> vk_cube_renderer;
 // extern std::unique_ptr<VulkanCanvas> vk_canvas;
 // extern std::unique_ptr<VulkanCanvas> vk_canvas2d;
-extern std::unique_ptr<VulkanMultiMeshRenderer> vk_multi_mesh_renderer;
+// extern std::unique_ptr<VulkanMultiMeshRenderer> vk_multi_mesh_renderer;
+extern std::unique_ptr<VulkanQuadRenderer> vk_quad_renderer;
 extern std::unique_ptr<VulkanClear> vk_clear;
 extern std::unique_ptr<VulkanFinish> vk_finish;
 
@@ -68,6 +70,7 @@ struct Resolution
 };
 
 GLFWwindow* initWindow(int width, int height, Resolution* resolution = nullptr);
+void terminateWindow(GLFWwindow* window);
 
 bool initVulkan(GLFWwindow* window, uint32_t width, uint32_t height);
 

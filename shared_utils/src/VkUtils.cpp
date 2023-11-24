@@ -1365,8 +1365,8 @@ size_t allocateVertexBuffer(
 bool createTexturedVertexBuffer(
     VulkanRenderDevice &vkDev,
     const char *fileName,
-    VkBuffer *storageBuffer, VkDeviceMemory *storageBufferMemory, size_t *vertexBufferSize,
-    size_t *indexBufferSize)
+    VkBuffer *storageBuffer, VkDeviceMemory *storageBufferMemory, 
+    size_t *vertexBufferSize, size_t *indexBufferSize)
 {
     const aiScene* scene = aiImportFile(fileName, aiProcess_Triangulate);
     if(!scene || !scene->HasMeshes())

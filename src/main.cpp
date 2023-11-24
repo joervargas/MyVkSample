@@ -113,9 +113,10 @@ int main()
     {
         vk_clear.get(),
         // vk_cube_renderer.get(),
-        vk_multi_mesh_renderer.get(),
+        // vk_multi_mesh_renderer.get(),
         // vk_model_renderer.get(),
         // vk_canvas.get(),
+        vk_quad_renderer.get(),
         // vk_canvas2d.get(),
         // vk_imgui.get(),
         vk_finish.get()
@@ -152,8 +153,9 @@ int main()
     // ImGui::DestroyContext();
 
     terminateVulkan();
-    glfwTerminate();
-    glslang_finalize_process();
+    terminateWindow(window);
+    // glfwTerminate();
+    // glslang_finalize_process();
 
     // PROFILER_DUMP("profiling.prof");
 
