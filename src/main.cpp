@@ -19,11 +19,15 @@ GLFWwindow* window;
 const uint32_t kScreenWidth = 1280;
 const uint32_t kScreenHeight = 720;
 
+float mouseX = 0.f;
+float mouseY = 0.f;
+
 struct MouseState
 {
     vec2 pos = vec2(0.0f);
     bool pressedLeft = false;
 } mouseState;
+
 
 int main()
 {
@@ -34,17 +38,6 @@ int main()
 
     // volkInitialize();
 
-    // if(!glfwInit()) { exit(EXIT_FAILURE); }
-    // if(!glfwVulkanSupported()) { exit(EXIT_FAILURE); }
-
-    // glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    // glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-    // window = glfwCreateWindow(kScreenWidth, kScreenHeight, "VulkanApp", nullptr, nullptr);
-    // if(!window)
-    // {
-    //     glfwTerminate();
-    //     exit(EXIT_FAILURE);
-    // }
     window = initWindow(kScreenWidth, kScreenHeight);
     
     // ImGui::CreateContext();
@@ -55,6 +48,8 @@ int main()
         [](auto* window, double x, double y)
         {
             // ImGui::GetIO().MousePos = ImVec2((float)x, (float)y);
+            mouseX = (float)x;
+            mouseY = (float)y;
         }
     );
 
@@ -62,12 +57,26 @@ int main()
         window,
         [](auto *window, int button, int action, int mods)
         {
-            // auto& io = ImGui::GetIO();
-            const int idx = button == GLFW_MOUSE_BUTTON_LEFT ? 0 : button == GLFW_MOUSE_BUTTON_RIGHT ? 2 : 1;
-            // io.MouseDown[idx] = action == GLFW_PRESS;
-            if(button == GLFW_MOUSE_BUTTON_LEFT)
+            // // auto& io = ImGui::GetIO();
+            // const int idx = button == GLFW_MOUSE_BUTTON_LEFT ? 0 : button == GLFW_MOUSE_BUTTON_RIGHT ? 2 : 1;
+            // // io.MouseDown[idx] = action == GLFW_PRESS;
+            // if(button == GLFW_MOUSE_BUTTON_LEFT)
+            // {
+            //     mouseState.pressedLeft = action == GLFW_PRESS;
+            // }
+
+            if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
             {
-                mouseState.pressedLeft = action == GLFW_PRESS;
+                printf("Left Mouse Btn Pressed!\n");
+                const float mx = (mouseX / (float)vkDev.framebufferWidth) * 2.0f - 1.0f;
+                const float my = (mouseY / (float)vkDev.framebufferHeight) * 2.0f - 1.0f;
+
+                animations.push_back(AnimationState{
+                    .position = vec2(mx, my),
+                    .startTime = glfwGetTime(),
+                    .textureIndex = 0,
+                    .flipbookOffset = kNumFlipbookFrames * (uint32_t)(rand() % 3)
+                });
             }
         }
     );
@@ -81,31 +90,31 @@ int main()
             {
                 glfwSetWindowShouldClose(window, GLFW_TRUE);
             }
-            if(key == GLFW_KEY_W)
-            {
-                positioner_firstPerson.movement.forward = pressed;
-            }
-            if(key == GLFW_KEY_S)
-            {
-                positioner_firstPerson.movement.backward = pressed;
-            }
-            if(key == GLFW_KEY_A)
-            {
-                positioner_firstPerson.movement.left = pressed;
-            }
-            if(key == GLFW_KEY_D)
-            {
-                positioner_firstPerson.movement.right = pressed;
-            }
-            if(key == GLFW_KEY_SPACE)
-            {
-                positioner_firstPerson.setUpVector(vec3(0.0f, 1.0f, 0.0f));
-            }
+            // if(key == GLFW_KEY_W)
+            // {
+            //     positioner_firstPerson.movement.forward = pressed;
+            // }
+            // if(key == GLFW_KEY_S)
+            // {
+            //     positioner_firstPerson.movement.backward = pressed;
+            // }
+            // if(key == GLFW_KEY_A)
+            // {
+            //     positioner_firstPerson.movement.left = pressed;
+            // }
+            // if(key == GLFW_KEY_D)
+            // {
+            //     positioner_firstPerson.movement.right = pressed;
+            // }
+            // if(key == GLFW_KEY_SPACE)
+            // {
+            //     positioner_firstPerson.setUpVector(vec3(0.0f, 1.0f, 0.0f));
+            // }
         }
     );
 
     initVulkan(window, kScreenWidth, kScreenHeight);
-
+    
     double timeStamp = glfwGetTime();
     float deltaSeconds = 0.0f;
 
@@ -122,6 +131,8 @@ int main()
         vk_finish.get()
     };
 
+    printf("Textures loaded. Click to make an explosion.\n");
+
     while(!glfwWindowShouldClose(window))
     {
         // {
@@ -135,7 +146,8 @@ int main()
         deltaSeconds = static_cast<float>(newTimeStamp - timeStamp);
         timeStamp = newTimeStamp;
 
-        const bool frameRendered = drawFrame(window, renderers);
+        // const bool frameRendered = drawFrame(window, renderers);
+        drawFrame(vkDev, [](uint32_t){}, composeFrame);
 
         // if(fpsCounter.tick(deltaSeconds, frameRendered))
         // {

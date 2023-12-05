@@ -38,22 +38,14 @@ const char* currentComboBoxItem = cameraType;
 const double kAnimationFPS = 60.0;
 const uint32_t kNumFlipbookFrames = 100;
 
-struct AnimationState
-{
-    glm::vec2 position = glm::vec2(0);
-    double startTime = 0;
-    uint32_t texureIndex = 0;
-    uint32_t flipbookOffset = 0;
-};
-
 std::vector<AnimationState> animations;
 
 void updateAnimations()
 {
     for(size_t i = 0; i < animations.size();)
     {
-        animations[i].texureIndex = animations[i].flipbookOffset + (uint32_t)(kAnimationFPS * ((glfwGetTime() - animations[i].startTime)));
-        if (animations[i].texureIndex - animations[i].flipbookOffset > (kNumFlipbookFrames - 1)) 
+        animations[i].textureIndex = animations[i].flipbookOffset + (uint32_t)(kAnimationFPS * ((glfwGetTime() - animations[i].startTime)));
+        if (animations[i].textureIndex - animations[i].flipbookOffset > (kNumFlipbookFrames - 1)) 
             { animations.erase(animations.begin() + i); }
         else 
             { i++; }
@@ -145,7 +137,8 @@ bool initVulkan(GLFWwindow *window, uint32_t width, uint32_t height)
 
     VkPhysicalDeviceDescriptorIndexingFeaturesEXT physDeviceDescriptorIndexingFeatures{};
     physDeviceDescriptorIndexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT,
-    physDeviceDescriptorIndexingFeatures.pNext = &drawParamFeatures;
+    // physDeviceDescriptorIndexingFeatures.pNext = &drawParamFeatures;
+    physDeviceDescriptorIndexingFeatures.pNext = nullptr;
     physDeviceDescriptorIndexingFeatures.shaderSampledImageArrayNonUniformIndexing = VK_TRUE;
     physDeviceDescriptorIndexingFeatures.descriptorBindingVariableDescriptorCount = VK_TRUE;
     physDeviceDescriptorIndexingFeatures.runtimeDescriptorArray = VK_TRUE;
@@ -166,7 +159,7 @@ bool initVulkan(GLFWwindow *window, uint32_t width, uint32_t height)
         for(uint32_t i = 0; i != kNumFlipbookFrames; i++)
         {
             char fname[1024];
-            snprintf(fname, sizeof(fname), "assets/explosion/explosion%02uframe%03u.tga", j, i+1);
+            snprintf(fname, sizeof(fname), "assets/textures/explosion%01u/explosion%02u-frame%03u.tga", j, j, i + 1);
             textureFiles.push_back(fname); 
         }
     }
@@ -343,7 +336,8 @@ void updateBuffers(uint32_t imageIndex)
 
 void composeFrame(GLFWwindow* window, uint32_t imageIndex, const std::vector<VulkanRendererBase*>& renderers)
 {
-    update3D(window, imageIndex);
+    // updateAnimations();
+    // update3D(window, imageIndex);
     // // renderGUI(window, imageIndex);
     // update2D(imageIndex);
 
@@ -361,76 +355,93 @@ void composeFrame(GLFWwindow* window, uint32_t imageIndex, const std::vector<Vul
 
         VK_CHECK(vkBeginCommandBuffer(commandBuffer, &bi));
 
-        for(auto& r: renderers)
-        {
-            r->fillCommandBuffer(commandBuffer, imageIndex);
-        }
+
+        // for(auto& r: renderers)
+        // {
+        //     r->fillCommandBuffer(commandBuffer, imageIndex);
+        // }
+
+
 
         VK_CHECK(vkEndCommandBuffer(commandBuffer));
 
     // EASY_END_BLOCK;
 }
 
-bool drawFrame(GLFWwindow *window, const std::vector<VulkanRendererBase *> &renderers)
+void composeFrame(VkCommandBuffer cmdBuffer, uint32_t imageIndex)
 {
-    // EASY_FUNCTION();
+    updateAnimations();
+    
+    vk_clear->fillCommandBuffer(cmdBuffer, imageIndex );
 
-    uint32_t imageIndex = 0;
-    VkResult result = vkAcquireNextImageKHR(vkDev.device, vkDev.swapchain, 0, vkDev.semaphore, VK_NULL_HANDLE, &imageIndex);
-    VK_CHECK(vkResetCommandPool(vkDev.device, vkDev.commandPool, 0));
-
-    if(result != VK_SUCCESS) { return false; }
-
-    composeFrame(window, imageIndex, renderers);
-
-    const VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
-
-    const VkSubmitInfo si =
+    for( size_t i = 0; i < animations.size(); i++)
     {
-        .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
-        .pNext = nullptr,
-        .waitSemaphoreCount = 1,
-        .pWaitSemaphores = &vkDev.semaphore,
-        .pWaitDstStageMask = waitStages,
-        .commandBufferCount = 1,
-        .pCommandBuffers = &vkDev.commandBuffers[imageIndex],
-        .signalSemaphoreCount = 1,
-        .pSignalSemaphores = &vkDev.renderSemaphore
-    };
-
-    {
-        // EASY_BLOCK("vkQueueSubmit", profiler::colors::Magenta);
-            VK_CHECK(vkQueueSubmit(vkDev.graphicsQueue, 1, &si, nullptr));
-        // EASY_END_BLOCK;
+        vk_quad_renderer->pushConstants(cmdBuffer, animations[i].textureIndex, animations[i].position);
+        vk_quad_renderer->fillCommandBuffer(cmdBuffer, imageIndex);
     }
-
-    const VkPresentInfoKHR pi =
-    {
-        .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
-        .pNext = nullptr,
-        .waitSemaphoreCount = 1,
-        .pWaitSemaphores = &vkDev.renderSemaphore,
-        .swapchainCount = 1,
-        .pSwapchains = &vkDev.swapchain,
-        .pImageIndices = &imageIndex
-    };
-
-    {
-        // EASY_BLOCK("vkQueuePresentKHR", profiler::colors::Magenta);
-            VK_CHECK(vkQueuePresentKHR(vkDev.graphicsQueue, &pi));
-        // EASY_END_BLOCK;
-    }
-
-    {
-        // EASY_BLOCK("vkDeviceWaitIdle", profiler::colors::Red);
-            VK_CHECK(vkDeviceWaitIdle(vkDev.device));
-        // EASY_END_BLOCK;
-    }
-
-    return true;
+    vk_finish->fillCommandBuffer(cmdBuffer, imageIndex);
 }
 
-bool drawFrame(VulkanRenderDevice &vkDev, const std::function<void(uint32_t)> &updateBuffersFunc, std::function<void(VkCommandBuffer, uint32_t)> &composeFrameFunc)
+// bool drawFrame(GLFWwindow *window, const std::vector<VulkanRendererBase *> &renderers)
+// {
+//     // EASY_FUNCTION();
+
+//     uint32_t imageIndex = 0;
+//     VkResult result = vkAcquireNextImageKHR(vkDev.device, vkDev.swapchain, 0, vkDev.semaphore, VK_NULL_HANDLE, &imageIndex);
+//     VK_CHECK(vkResetCommandPool(vkDev.device, vkDev.commandPool, 0));
+
+//     if(result != VK_SUCCESS) { return false; }
+
+//     composeFrame(window, imageIndex, renderers);
+
+//     const VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+
+//     const VkSubmitInfo si =
+//     {
+//         .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+//         .pNext = nullptr,
+//         .waitSemaphoreCount = 1,
+//         .pWaitSemaphores = &vkDev.semaphore,
+//         .pWaitDstStageMask = waitStages,
+//         .commandBufferCount = 1,
+//         .pCommandBuffers = &vkDev.commandBuffers[imageIndex],
+//         .signalSemaphoreCount = 1,
+//         .pSignalSemaphores = &vkDev.renderSemaphore
+//     };
+
+//     {
+//         // EASY_BLOCK("vkQueueSubmit", profiler::colors::Magenta);
+//             VK_CHECK(vkQueueSubmit(vkDev.graphicsQueue, 1, &si, nullptr));
+//         // EASY_END_BLOCK;
+//     }
+
+//     const VkPresentInfoKHR pi =
+//     {
+//         .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+//         .pNext = nullptr,
+//         .waitSemaphoreCount = 1,
+//         .pWaitSemaphores = &vkDev.renderSemaphore,
+//         .swapchainCount = 1,
+//         .pSwapchains = &vkDev.swapchain,
+//         .pImageIndices = &imageIndex
+//     };
+
+//     {
+//         // EASY_BLOCK("vkQueuePresentKHR", profiler::colors::Magenta);
+//             VK_CHECK(vkQueuePresentKHR(vkDev.graphicsQueue, &pi));
+//         // EASY_END_BLOCK;
+//     }
+
+//     {
+//         // EASY_BLOCK("vkDeviceWaitIdle", profiler::colors::Red);
+//             VK_CHECK(vkDeviceWaitIdle(vkDev.device));
+//         // EASY_END_BLOCK;
+//     }
+
+//     return true;
+// }
+
+bool drawFrame(VulkanRenderDevice &vkDev, const std::function<void(uint32_t)> &updateBuffersFunc, const std::function<void(VkCommandBuffer, uint32_t)> &composeFrameFunc)
 {
     uint32_t imageIndex = 0;
     VkResult result = vkAcquireNextImageKHR(vkDev.device, vkDev.swapchain, 0, vkDev.semaphore, VK_NULL_HANDLE, &imageIndex);

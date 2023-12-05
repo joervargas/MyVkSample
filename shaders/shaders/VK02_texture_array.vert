@@ -8,8 +8,16 @@ struct ImDrawVert
     float x, y, z, u, v;
 };
 
-layout(binding = 1) readonly buffer SBO { ImDrawVert data[]; } sbo;
-layout(push_constant) uniform uPushConstant { vec2 position; uint textureIndex; } pc;
+layout(binding = 1) readonly buffer SBO 
+{ 
+    ImDrawVert data[]; 
+} sbo;
+
+layout(push_constant) uniform uPushConstant 
+{ 
+    vec2 position; 
+    uint textureIndex; 
+} pc;
 
 void main()
 {

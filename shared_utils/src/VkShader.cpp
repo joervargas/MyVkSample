@@ -82,8 +82,8 @@ void printShaderSource(const char *text)
         {
             printf("%c", *text);
         }
-        printf("\n");
     }
+    printf("\n");
 }
 
 void saveSPIRVBinaryFile(const char *fileName, unsigned int *code, size_t size)

@@ -204,7 +204,10 @@ VkResult createDevice(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures2
     const std::vector<const char *> device_exts =
     {
         VK_KHR_SWAPCHAIN_EXTENSION_NAME,
-        VK_KHR_SHADER_DRAW_PARAMETERS_EXTENSION_NAME
+        VK_KHR_MAINTENANCE3_EXTENSION_NAME,
+        VK_KHR_SHADER_DRAW_PARAMETERS_EXTENSION_NAME,
+        VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
+        // VK_KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME
     };
 
     const VkDeviceQueueCreateInfo queueCI = {
@@ -2012,11 +2015,11 @@ bool executeComputeShader(VulkanRenderDevice &vkDev, VkPipeline pipeline, VkPipe
     {
         .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
         .pNext = nullptr,
-        .commandBufferCount = 1,
-        .pCommandBuffers = &cmdBuffer,
-        .pWaitDstStageMask = nullptr,
         .waitSemaphoreCount = 0,
         .pWaitSemaphores = nullptr,
+        .pWaitDstStageMask = nullptr,
+        .commandBufferCount = 1,
+        .pCommandBuffers = &cmdBuffer,
         .signalSemaphoreCount = 0,
         .pSignalSemaphores = nullptr
     };

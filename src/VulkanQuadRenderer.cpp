@@ -89,7 +89,7 @@ VulkanQuadRenderer::~VulkanQuadRenderer()
 
 void VulkanQuadRenderer::updateBuffer(VulkanRenderDevice &vkDev, size_t i)
 {
-    uploadBufferData(vkDev, storageBuffersMemory[i], 0, quads.data(), quads.size());
+    uploadBufferData(vkDev, storageBuffersMemory[i], 0, quads.data(), quads.size() * sizeof(VertexData));
 }
 
 void VulkanQuadRenderer::pushConstants(VkCommandBuffer cmdBuffer, uint32_t texture_index, const glm::vec2 &offset)
@@ -173,8 +173,17 @@ bool VulkanQuadRenderer::createDescriptorSet(VulkanRenderDevice &vkDev)
 
     for (size_t i = 0; i < vkDev.swapchainImages.size(); i++)
     {
-        const VkDescriptorBufferInfo bufferInfo1 = { .buffer = m_uniformBuffers[i], .offset = 0, .range = sizeof(ConstBuffer) };
-        const VkDescriptorBufferInfo bufferInfo2 = { .buffer = storageBuffers[i], .offset = 0, .range = vertexBufferSize };
+        const VkDescriptorBufferInfo bufferInfo1 = { 
+            .buffer = m_uniformBuffers[i],
+            .offset = 0,
+            .range = sizeof(ConstBuffer)
+        };
+        
+        const VkDescriptorBufferInfo bufferInfo2 = { 
+            .buffer = storageBuffers[i],
+            .offset = 0,
+            .range = vertexBufferSize
+        };
 
         const std::array<VkWriteDescriptorSet, 3> descriptorWrites = {
             VkWriteDescriptorSet {
@@ -189,7 +198,7 @@ bool VulkanQuadRenderer::createDescriptorSet(VulkanRenderDevice &vkDev)
             VkWriteDescriptorSet {
                 .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
                 .dstSet = m_descriptorSets[i],
-                .dstBinding = 0,
+                .dstBinding = 1,
                 .dstArrayElement = 0,
                 .descriptorCount = 1,
                 .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
