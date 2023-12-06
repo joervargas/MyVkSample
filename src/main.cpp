@@ -67,7 +67,6 @@ int main()
 
             if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
             {
-                printf("Left Mouse Btn Pressed!\n");
                 const float mx = (mouseX / (float)vkDev.framebufferWidth) * 2.0f - 1.0f;
                 const float my = (mouseY / (float)vkDev.framebufferHeight) * 2.0f - 1.0f;
 
