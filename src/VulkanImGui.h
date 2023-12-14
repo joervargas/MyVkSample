@@ -11,7 +11,7 @@ class VulkanImGui : public VulkanRendererBase
 public:
 
     explicit VulkanImGui(VulkanRenderDevice& vkDev);
-    // explicit VulkanImGui(VulkanRenderDevice& vkDev, const std::vector<VulkanTexture>& textures);
+    explicit VulkanImGui(VulkanRenderDevice& vkDev, const std::vector<VulkanTexture>& textures);
 
     virtual ~VulkanImGui();
 
@@ -24,7 +24,7 @@ private:
 
     const ImDrawData* drawData = nullptr;
 
-    // std::vector<VulkanTexture> m_extTextures;
+    std::vector<VulkanTexture> m_extTextures;
 
     VkDeviceSize m_bufferSize;
     std::vector<VkBuffer> m_storageBuffers;
@@ -35,4 +35,5 @@ private:
 
     bool createDescriptorSet(VulkanRenderDevice& vkDev);
 
+    bool createMultiDescriptorSet(VulkanRenderDevice& vkDev);
 };
