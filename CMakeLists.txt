@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.26)
 
 project(MyVkSample CXX C)
+set(CMAKE_CXX_STANDARD 20)
 
 find_package(Vulkan REQUIRED)
 if(VULKAN_FOUND)
