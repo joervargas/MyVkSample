@@ -1,5 +1,6 @@
 #include "VulkanQuadRenderer.h"
 
+#include <array>
 
 static constexpr int MAX_QUADS = 256;
 

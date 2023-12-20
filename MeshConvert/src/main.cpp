@@ -71,7 +71,8 @@ int main(int argc, char* argv[])
     saveMeshData(dst_file, m_meshData);
 
     char drawdata_file_extension[] = ".drawdata";
-    size_t buffer_size = strlen(drawdata_file_extension) + strlen(dst_file) + 1;
+    // size_t buffer_size = strlen(drawdata_file_extension) + strlen(dst_file) + 1;
+    const size_t buffer_size = 3072;
     // char grid_file[buffer_size] = "";
     char grid_file[buffer_size];
     memset(grid_file, '\0', buffer_size);
