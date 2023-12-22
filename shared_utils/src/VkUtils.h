@@ -224,7 +224,7 @@ bool createImage(
 
 bool createImageView(
     VkDevice device, 
-    VkImage image, 
+    VkImage& image, 
     VkFormat format, 
     VkImageAspectFlags aspectFlags, 
     VkImageView *imageView, VkImageViewType viewType = VK_IMAGE_VIEW_TYPE_2D, 

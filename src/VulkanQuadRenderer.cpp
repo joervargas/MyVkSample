@@ -1,5 +1,5 @@
 #include "VulkanQuadRenderer.h"
-
+#include <VkUtils.h>
 #include <array>
 
 static constexpr int MAX_QUADS = 256;
@@ -42,7 +42,7 @@ VulkanQuadRenderer::VulkanQuadRenderer(VulkanRenderDevice &vkDev, const std::vec
     }
 
     const size_t numTextureFiles = textureFiles.size();
-    textures.resize(numTextureFiles);
+    textures.resize(numTextureFiles, VulkanImage());
     textureSamplers.resize(numTextureFiles);
     for(size_t i = 0; i < numTextureFiles; i++)
     {

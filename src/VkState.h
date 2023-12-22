@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vulkan/vulkan.h>
 #include "VkUtils.h"
 #include <VkShader.h>
 #include "Camera.h"
@@ -15,7 +16,7 @@
 #include "VulkanQuadRenderer.h"
 
 // #include "LinearGraph.h"
-
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
 #include <cstdio>

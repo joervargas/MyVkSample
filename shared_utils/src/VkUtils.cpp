@@ -823,7 +823,7 @@ bool createImage(
     return true;
 }
 
-bool createImageView(VkDevice device, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, VkImageView *imageView, VkImageViewType viewType, uint32_t layerCount, uint32_t miplevels)
+bool createImageView(VkDevice device, VkImage& image, VkFormat format, VkImageAspectFlags aspectFlags, VkImageView *imageView, VkImageViewType viewType, uint32_t layerCount, uint32_t miplevels)
 {
     const VkImageViewCreateInfo viewInfo =
     {

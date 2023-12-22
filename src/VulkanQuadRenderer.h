@@ -1,6 +1,7 @@
 #pragma once
 
 #include "VulkanRendererBase.h"
+#include <vulkan/vulkan.h>
 #include <string>
 #include <stdio.h>
 #include <glm/glm.hpp>

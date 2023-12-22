@@ -16,6 +16,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+
 include(FetchContent)
 
 message("Fetching glslang...")
@@ -182,5 +183,13 @@ endif()
 #     VERBATIM
 # )
 
-file(COPY shaders/shaders DESTINATION bin)
-file(COPY assets/assets DESTINATION bin)
+# file(COPY shaders/shaders DESTINATION bin)
+# file(COPY assets/assets DESTINATION bin)
+# file(COPY shaders/shaders DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+# file(COPY assets/assets DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+add_custom_command(
+    TARGET ${PROJECT_NAME}
+    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_SOURCE_DIR}/assets" "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
+    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_SOURCE_DIR}/shaders" "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
+    VERBATIM
+)
